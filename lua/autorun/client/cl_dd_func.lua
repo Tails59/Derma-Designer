@@ -62,16 +62,18 @@ MsgC( Color( 255,215,0 ), footer .. "\n" )
 Name: FilterString( string )
 -----------------------------------------------------------]]
 local function FilterString( str )
-
-newstring = ""
+	newstring = ""
 
     for i=1,#str do
 
-     if( string.sub( str, i, i ) == "(" or string.sub( str, i, i )  == ")" ) then
-        else
-         newstring = newstring .. string.sub( str, i, i )
-        end
+    if( string.sub( str, i, i ) == "(" or string.sub( str, i, i )  == ")" ) then
+    
+    else
+        newstring = newstring .. string.sub( str, i, i )
     end
+    
+    end
+    
     return newstring
 end
 

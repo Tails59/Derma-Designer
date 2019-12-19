@@ -1,5 +1,4 @@
 CreateClientConVar("dd_gap",15,false,false)
-
 surface.CreateFont( "Test_font", {
 	font = "DermaDefault",
 	size = 25,
@@ -16,8 +15,22 @@ surface.CreateFont( "Test_font", {
 	additive = false,
 	outline = false,
 } )
---SetZPos
-MsgC(Color(0, 255, 0), "DermaDesigner: Loaded Main!")
+
+local red = 	Color(255, 000, 000)
+local white = 	Color(255, 255, 255)
+local green = 	Color(000, 255, 000)
+local grey = 	Color(042, 042, 042)
+local blue = 	Color(000, 000, 255)
+local lblue = 	Color(000, 255, 255)
+
+local surface = surface
+local ScrW = ScrW
+local ScrH = ScrH
+local draw = draw
+local gui = gui
+local vgui = vgui
+
+MsgC(green, "DermaDesigner: Loaded Main!")
 MsgN("")
 --[[---------------------------------------------------------
 					2
@@ -89,7 +102,7 @@ local function Main()
 	settingsPanel:SetSize(Mainf:GetWide()+11,Mainf:GetTall() * 0.333)
 		
 	function settingsPanel:Paint( w, h )
-		surface.SetDrawColor(42,42,42,255)
+		surface.SetDrawColor(grey)
 		surface.DrawRect(0,0,w,h)
 	end
 
@@ -165,12 +178,12 @@ local function Main()
 	zuletzt:SetSize(Mainf:GetWide()+11,(Mainf:GetTall() - Mainf:GetTall() * 0.333))
 		  
 	function zuletzt:Paint( w, h )
-		surface.SetDrawColor( 42, 42, 42, 255 )
+		surface.SetDrawColor(grey)
 		surface.DrawRect( 0, 0, w, h )
 	end
 		  
 	function zuletzt:PaintOver( w, h )
-		draw.SimpleText( "Recent Projects" , "Test_font", w * 0.1, h * 0.03, Color(255,255,255,255), 0, 1 )
+		draw.SimpleText( "Recent Projects" , "Test_font", w * 0.1, h * 0.03, white, 0, 1 )
 	end
 	t:AddItem(zuletzt,2)
 
@@ -395,7 +408,7 @@ function OpenDDD()
 	DDP.frame:ShowCloseButton( true )
 	DDP.frame:MakePopup()
 	function DDP.frame:OnClose()
-		MsgC(Color(0, 255, 0), "Closed DermaDesigner")
+		MsgC(green, "Closed DermaDesigner")
 		MsgN("")
 
 		DDP.frame = nil
@@ -417,7 +430,7 @@ function OpenDDD()
 	line:SetVisible(true)
 	function line:Paint()
 
-	surface.SetDrawColor(255,0,0,255)
+	surface.SetDrawColor(red)
 	surface.DrawRect(0,0,self:GetWide(),self:GetTall())
 	end
 
@@ -429,9 +442,8 @@ function OpenDDD()
 	line2:SetZPos(32766)
 	line2:SetVisible(true)
 	function line2:Paint()
-
-	surface.SetDrawColor(0,0,255,255)
-	surface.DrawRect(0,0,self:GetWide(),self:GetTall())
+		surface.SetDrawColor(blue)
+		surface.DrawRect(0,0,self:GetWide(),self:GetTall())
 	end
 
 	--[[---------------------------------------------------------
@@ -446,8 +458,8 @@ function OpenDDD()
 	line3:SetZPos(32766)
 	line3:SetVisible(true)
 	function line3:Paint( w, h )
-	surface.SetDrawColor(0,255,255,255)
-	surface.DrawRect(0,0,w,h)
+		surface.SetDrawColor(lblue)
+		surface.DrawRect(0,0,w,h)
 	end
 
 
@@ -458,7 +470,7 @@ function OpenDDD()
 	line4:SetZPos(32766)
 	line4:SetVisible(true)
 	function line4:Paint()
-		surface.SetDrawColor(0,0,255,255)
+		surface.SetDrawColor(blue)
 		surface.DrawRect(0,0,self:GetWide(),self:GetTall())
 	end
 
@@ -503,10 +515,10 @@ function OpenMenu()
 if( menu_pressed != nil ) then 
 if( !menu_pressed:IsVisible() ) then menu_pressed = nil end return end
 
-menu_pressed = DermaMenu() 
-menu_pressed:AddOption( "copie", function() if( #DDP.copied > 0 ) then table.Empty(DDP.copied) end table.insert( DDP.copied, { classname =  DDP.selected[1].ClassName, text = DDP.selected[1]:GetText(), w = DDP.selected[1]:GetWide(), h = DDP.selected[1]:GetTall() } )  menu_preesed = nil  end )
+menu_pressed = DermaMenu()
+menu_pressed:AddOption( "Copy", function() if( #DDP.copied > 0 ) then table.Empty(DDP.copied) end table.insert( DDP.copied, { classname =  DDP.selected[1].ClassName, text = DDP.selected[1]:GetText(), w = DDP.selected[1]:GetWide(), h = DDP.selected[1]:GetTall() } )  menu_preesed = nil  end )
 if( #DDP.copied > 0 ) then
-menu_pressed:AddOption( "paste", function() 
+menu_pressed:AddOption( "Paste", function() 
 	local val = #DDP.elemente + 1
 	DDP.elemente[val] = vgui.Create(DDP.copied[1].classname,DDP.frame)
 	DDP.elemente[val]:SetText( DDP.copied[1].text )
@@ -522,23 +534,24 @@ menu_pressed:AddOption( "paste", function()
 
 menu_pressed = nil  end ) 
 end
-menu_pressed:AddOption( "cut", function() if( #DDP.copied > 0 ) then table.Empty(DDP.copied) end for k,v in ipairs( table.GetKeys( DProperties.Categories ) ) do DProperties.Categories[v]:Clear() end table.insert( DDP.copied, { classname =  DDP.selected[1].ClassName, text = DDP.selected[1]:GetText(), w = DDP.selected[1]:GetWide(), h = DDP.selected[1]:GetTall() } ) DDP.selected[1]:Remove() table.remove(DDP.elemente,table.KeyFromValue( DDP.elemente, DDP.selected[1] ) ) table.Empty(DDP.selected) menu_pressed = nil  end ) 
+menu_pressed:AddOption( "Cut", function() if( #DDP.copied > 0 ) then table.Empty(DDP.copied) end for k,v in ipairs( table.GetKeys( DProperties.Categories ) ) do DProperties.Categories[v]:Clear() end table.insert( DDP.copied, { classname =  DDP.selected[1].ClassName, text = DDP.selected[1]:GetText(), w = DDP.selected[1]:GetWide(), h = DDP.selected[1]:GetTall() } ) DDP.selected[1]:Remove() table.remove(DDP.elemente,table.KeyFromValue( DDP.elemente, DDP.selected[1] ) ) table.Empty(DDP.selected) menu_pressed = nil  end ) 
 //[ERROR] lua/vgui/dproperties.lua:125: Tried to use invalid object (type Panel) (Object was NULL or not of the right type)
-menu_pressed:AddOption( "delete", function() for k,v in ipairs( table.GetKeys( DProperties.Categories ) ) do DProperties.Categories[v]:Clear() end DDP.selected[1]:Remove() table.remove(DDP.elemente,table.KeyFromValue( DDP.elemente, DDP.selected[1] ) ) table.Empty(DDP.selected) menu_pressed = nil  end ) 
-menu_pressed:AddOption( "Code display", function() CodeView(  GetCurrentCode( ), DDP.Name ) menu_pressed = nil  end ) 
+menu_pressed:AddOption( "Delete", function() for k,v in ipairs( table.GetKeys( DProperties.Categories ) ) do DProperties.Categories[v]:Clear() end DDP.selected[1]:Remove() table.remove(DDP.elemente,table.KeyFromValue( DDP.elemente, DDP.selected[1] ) ) table.Empty(DDP.selected) menu_pressed = nil  end ) 
+menu_pressed:AddOption( "View Code", function() CodeView(  GetCurrentCode( ), DDP.Name ) menu_pressed = nil  end ) 
 menu_pressed:Open()
 
 
 end
 
-		local px,py = nil, nil
-		local parent = nil
+local px,py = nil, nil
+local parent = nil
 
- --[[---------------------------------------------------------
+--[[---------------------------------------------------------
 		NAME:CheckSelected
 -----------------------------------------------------------]]
 local function CheckSelected()
 if( DDP.frame == nil) then return end
+	
 	if( DDP.frame:IsActive()) then
 		if( DDP.MousePos[1] != gui.MouseX() or DDP.MousePos[2] != gui.MouseY() ) then
 			DDP.Mousemove = true
@@ -547,6 +560,7 @@ if( DDP.frame == nil) then return end
 		else
 			DDP.Mousemove = false
 		end
+		
 		for k,v in ipairs( DDP.elemente ) do
 			if( v:IsSelected() ) then
 				if( table.HasValue( DDP.selected, v ) ) then
@@ -786,101 +800,12 @@ if( DDP.frame == nil) then return end
 	end
 
 end
-	
 hook.Add("Think","DDP_vgui_think",CheckSelected)
 
---[[---------------------------------------------------------
-   Name: 
------------------------------------------------------------]]
-function DebugHud()
-
-if( DDP.frame == nil ) then return end
-
-if( DDP.selected[1] == nil ) then return end
-if( !DDP.selected[1]:IsValid() ) then return end 
-local x1,y1 = DDP.selected[1]:GetPos()
-draw.SimpleText( "Selected: " , "DermaDefault", 50, 25, Color(255,0,0,255), 1, 1 )
-draw.SimpleText( "X: " .. x1 .. " Y: " .. y1 .. " Z: " .. DDP.selected[1]:GetZPos() .. "" , "DermaDefault", 50, 50, Color(255,0,0,255), 1, 1 )
-
-for k,v in ipairs( DDP.elemente ) do
-
-	if(v != DDP.selected[1] ) then
-	 if( !v:IsValid() ) then
-	 else
-	local fx,fy = DDP.frame:LocalCursorPos()
-	local x,y = v:GetPos()
-	draw.SimpleText( "X: " .. x .. " Y: " .. y .. " Z: " .. v:GetZPos() .. " Mousepos: " .. fy .. " " .. DDP.MousePressed[2] .. "" , "DermaDefault", 50, 50+k*25, Color(255,0,0,255), 1, 1 )
-	end
-	end
-	end
-end
-
-hook.Add("HUDPaint","Paint",DebugHud)
-
-
--- Set type ermitteln ] lua_run_cl a = [[ {"bla"} ]] RunString( "print(type(" .. a .. "))")
-
-
---[[---------------------------------------------------------
-   Name: 
------------------------------------------------------------]]
-local function CursorDisplay()
-
-	if( timer.Exists( "ddp_place" ) ) then
-		local x,y = input.GetCursorPos()
-
-		surface.SetDrawColor( 255, 255, 255, 255 )
-		surface.SetMaterial( Material("DD/icons/" .. DDP.icon .. ".png") ) 
-		surface.DrawTexturedRect( x+10,y+20,15,15 )
-	end
+function drawPos()
+	if( DDP.frame == nil ) then return end
 	
-	--DDP.icon
+	draw.SimpleText("Mouse X: "..gui.MouseX(), "CloseCaption_Bold", 15, 10, red)
+	draw.SimpleText("Mouse Y: "..gui.MouseY(), "CloseCaption_Bold", 15, 30, red)
 end
-hook.Add("DrawOverlay","DDP_Cursor", CursorDisplay )
-
-
-
---[[---------------------------------------------------------
-   Name: Test
------------------------------------------------------------]]
-
-function CreateTestSwitcher()
-
-	
-local frame = vgui.Create("DFrame")
-frame:SetPos( 0.052083333333333 * ScrW(), 0.083333333333333 * ScrH() )
-frame:SetSize( 0.5 * ScrW(), 0.5 * ScrH() )
-frame:MakePopup()
-
-local testswitcher = vgui.Create("DDPageSwitch", frame)
-	  testswitcher:SetPos( 25,25)
-	  testswitcher:SetSize( 0.5 * ScrW() - 50, 0.5 * ScrH() - 50 )
-
-local panel1 = vgui.Create("DPanel")
-
-local button1 = vgui.Create("DButton",panel1)
-button1:SetPos(175,250)
-button1:SetSize(150,20)
-button1:SetText("21314523534")
-local panel2 = vgui.Create("DPanel")
-
-local button2 = vgui.Create("DButton",panel2)
-button2:SetPos(150,300)
-button2:SetText("asdjkaj1832238sdlkasjdk")
-button2:SetSize(150,20)
-local panel3 = vgui.Create("DPanel")
-
-local button3 = vgui.Create("DButton",panel3)
-button3:SetText("asdjkajsdlkasjdk")
-button3:SetPos(150,150)
-button3:SetSize(150,20)
-
-
-testswitcher:AddPage(panel1)
-testswitcher:AddPage(panel2)
-testswitcher:AddPage(panel3)
-end
-
-
-
-
+hook.Add("HUDPaint","drawPos", drawPos)
