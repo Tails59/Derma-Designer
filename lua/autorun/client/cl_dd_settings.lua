@@ -10,7 +10,7 @@ frame:SetDraggable( false )
  local e = vgui.Create("DButton",frame)
 						 e:SetPos(0.058823529411765*frame:GetWide() ,0.72955974842767*frame:GetTall())
 						 e:SetSize(0.37950664136622*frame:GetWide(),0.13836477987421*frame:GetTall())
-						 e:SetText( "yes" )
+						 e:SetText( "Yes" )
 						 e.DoClick = function( self )
 
 							func()
@@ -21,7 +21,7 @@ frame:SetDraggable( false )
  local e = vgui.Create("DButton",frame)
 						 e:SetPos(0.56356736242884*frame:GetWide() ,0.72955974842767*frame:GetTall())
 						 e:SetSize(0.37950664136622*frame:GetWide(),0.13836477987421*frame:GetTall())
-						 e:SetText( "no" )
+						 e:SetText( "No" )
 						 e.DoClick = function( self )
 
 							func2()
@@ -184,13 +184,6 @@ end
 			DDListButtom:SizeToContents()                  
 			panel:AddItem( DDListButtom) 
 		end
-
-
-
-
-
-
-
 
 	local Save = vgui.Create( "DButton", panel2 )
 	Save:SetPos(panel2:GetWide() * .5 - panel2:GetWide() * .25, panel2:GetTall() * .5)

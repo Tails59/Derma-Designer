@@ -1,7 +1,3 @@
-
-
-
-
 surface.CreateFont( "Button", {
 	font = "DermaDefault",
 	size = ScrH() * .0166,
@@ -20,8 +16,8 @@ surface.CreateFont( "Button", {
 } )
 
 --RunString
-if( !file.IsDir("DD/db","DATA" ) ) then
-	file.CreateDir("DD/db")
+if( !file.IsDir("dd/db","DATA" ) ) then
+	file.CreateDir("dd/db")
 end
 
 local head = 
@@ -204,7 +200,7 @@ function GetCatImage( n )
  n = string.lower(n)
  t = {}
  local val = ""
-	local files, dir = file.Find( "materials/DD/icons/*.png", "GAME")
+	local files, dir = file.Find( "materials/dd/icons/*.png", "GAME")
 		for k,v in ipairs( files ) do
 
 			local name = string.lower(string.TrimRight( v, ".png") )
@@ -548,52 +544,52 @@ end
 Name: CreateFrameFile( name )
 -----------------------------------------------------------]]
 function CreateFrameFile( name )
-local name = name .. "_lua"
-local path = "dd/db/projects/"
-local parent = "frame"
-local fname = "RunWindow"
+	local name = name .. "_lua"
+	local path = "dd/db/projects/"
+	local parent = "frame"
+	local fname = "RunWindow"
 
-if( file.Exists(path .. name .. ".txt", "DATA") ) then file.Delete( path .. name .. ".txt" )end
+	if( file.Exists(path .. name .. ".txt", "DATA") ) then file.Delete( path .. name .. ".txt" )end
+	if(! file.IsDir(path, "DATA")) then file.CreateDir(path) end
 
-file.Write(path .. name .. ".txt", "" .. [[local function ]] .. fname .. [[()
-local frame = vgui.Create("]] .. DDP.frame:GetTable().Derma.ClassName .. [[")
-frame:SetPos( ]] .. DDP.frame.x / ScrW() .. [[ * ScrW(), ]] .. DDP.frame.y / ScrH() .. [[ * ScrH() )
-frame:SetSize( ]] .. DDP.frame:GetWide() / ScrW() .. [[ * ScrW(), ]] .. DDP.frame:GetTall() / ScrH() .. [[ * ScrH() ) ]] .. "\nframe:MakePopup()\n")
-for k,v in ipairs( DDP.elemente ) do
-    if( v != nil ) then
-        if( v:IsValid() ) then
-	        local str = [[ local e = vgui.Create( "]] .. v.ClassName .. [[", ]] .. parent .. [[ )
-						 e:SetPos( ]] .. v.x / DDP.frame:GetWide()  .. " * " .. parent .. [[:GetWide(), ]] .. v.y / DDP.frame:GetTall() .. " * " ..  parent .. [[:GetTall() )
-						 e:SetSize( ]] .. v:GetWide() / DDP.frame:GetWide() .. " * " .. parent .. [[:GetWide(), ]] .. v:GetTall() / DDP.frame:GetTall() .. " * " ..  parent .. [[:GetTall() )
-				]] 
-	        for a,b in ipairs( DDP.vgui[v.ClassName] ) do
+	file.Write(path .. name .. ".txt", "" .. [[local function ]] .. fname .. [[()
+	local frame = vgui.Create("]] .. DDP.frame:GetTable().Derma.ClassName .. [[")
+	frame:SetPos( ]] .. DDP.frame.x / ScrW() .. [[ * ScrW(), ]] .. DDP.frame.y / ScrH() .. [[ * ScrH() )
+	frame:SetSize( ]] .. DDP.frame:GetWide() / ScrW() .. [[ * ScrW(), ]] .. DDP.frame:GetTall() / ScrH() .. [[ * ScrH() ) ]] .. "\nframe:MakePopup()\n")
+	for k,v in ipairs( DDP.elemente ) do
+	    if( v != nil ) then
+	        if( v:IsValid() ) then
+		        local str = [[ local e = vgui.Create( "]] .. v.ClassName .. [[", ]] .. parent .. [[ )
+							 e:SetPos( ]] .. v.x / DDP.frame:GetWide()  .. " * " .. parent .. [[:GetWide(), ]] .. v.y / DDP.frame:GetTall() .. " * " ..  parent .. [[:GetTall() )
+							 e:SetSize( ]] .. v:GetWide() / DDP.frame:GetWide() .. " * " .. parent .. [[:GetWide(), ]] .. v:GetTall() / DDP.frame:GetTall() .. " * " ..  parent .. [[:GetTall() )
+					]] 
+		        for a,b in ipairs( DDP.vgui[v.ClassName] ) do
 
-	        	if( GetValidMethod( v, b.name ) ) then 
-	            	value_X = nil
-			
-		           	RunString( "value_X = DDP.elemente[" ..k .. "]:Get" .. FilterString( b.name )  .. "()" )
-			        if( type( value_X ) == "string" ) then
-		            	str = str .. [[ e:]] .. b.name .. [[( "]] .. tostring(value_X) .. [[" )
-						]]
-		        	else
-		        	str = str .. [[ e:]] .. b.name .. [[( ]] .. tostring(value_X) .. [[ )
-						]]
+		        	if( GetValidMethod( v, b.name ) ) then 
+		            	value_X = nil
+				
+			           	RunString( "value_X = DDP.elemente[" ..k .. "]:Get" .. FilterString( b.name )  .. "()" )
+				        if( type( value_X ) == "string" ) then
+			            	str = str .. [[ e:]] .. b.name .. [[( "]] .. tostring(value_X) .. [[" )
+							]]
+			        	else
+			        		str = str .. [[ e:]] .. b.name .. [[( ]] .. tostring(value_X) .. [[ )
+							]]
+				        end
 			        end
-			
 		        end
 
+				file.Write(path .. name .. ".txt", "" .. file.Read(path .. name .. ".txt","DATA") .. "\n" .. str .. "")
 	        end
-			file.Write(path .. name .. ".txt", "" .. file.Read(path .. name .. ".txt","DATA") .. "\n" .. str .. "")
-			
-        end
-    end
+	    end
+	end
 
-end
-
+	print(path..name..".txt")
+	print(fname)
 	file.Write(path .. name .. ".txt", "" .. file.Read(path .. name .. ".txt","DATA") .. "\n end\n" .. fname .. "()")
 	RunString( file.Read(path .. name .. ".txt","DATA") ) 
 
-	hook.Call( "DDP_Debug", nil, name  )
+	hook.Call( "DDP_Debug", nil, name )
 end
 
 --[[---------------------------------------------------------
@@ -653,88 +649,89 @@ end
   CreateWindowFromFile
 -----------------------------------------------------------]]
 function CreateWindowFromFile( tab )
+	if( DDP.frame != nil ) then
+		DDP.frame:Remove()
+		DDP.frame = nil
+		table.Empty(DDP.elemente)
+		table.Empty(DDP.selected)
+	end
 
-if( DDP.frame != nil ) then
-	DDP.frame:Remove()
+	DDP.frame = vgui.Create( "DFrame" )
+	DDP.frame:SetPos( tab.frame.x, tab.frame.y )
+	DDP.frame:SetSize(tab.frame.w, tab.frame.h)
+	DDP.frame:SetTitle( tab.frame.title )
+	DDP.frame:SetVisible( true )
+	DDP.frame:SetDraggable( true )
+	DDP.frame:SetSizable( true )
+	DDP.frame:ShowCloseButton( true )
+	DDP.frame:MakePopup()
+	function DDP.frame:OnClose()
+	LocalPlayer():ChatPrint( "[DermaDesigner]: closed")
 	DDP.frame = nil
 	table.Empty(DDP.elemente)
 	table.Empty(DDP.selected)
-end
 
-DDP.frame = vgui.Create( "DFrame" )
-DDP.frame:SetPos( tab.frame.x, tab.frame.y )
-DDP.frame:SetSize(tab.frame.w, tab.frame.h)
-DDP.frame:SetTitle( tab.frame.title )
-DDP.frame:SetVisible( true )
-DDP.frame:SetDraggable( true )
-DDP.frame:SetSizable( true )
-DDP.frame:ShowCloseButton( true )
-DDP.frame:MakePopup()
-function DDP.frame:OnClose()
-LocalPlayer():ChatPrint( "[DermaDesigner]: closed")
-DDP.frame = nil
-table.Empty(DDP.elemente)
-table.Empty(DDP.selected)
+	end
 
-end
+	--[[---------------------------------------------------------
+	   Vertical: 
+	-----------------------------------------------------------]]
 
---[[---------------------------------------------------------
-   Vertical: 
------------------------------------------------------------]]
+	line = vgui.Create("DButton",DDP.frame)
+	line:SetText("")
+	line:SetPos(0,0)
+	line:SetSize(5,0)
+	line:SetZPos(32766)
+	line:SetVisible(true)
+	
+	function line:Paint()
+	    surface.SetDrawColor(0,0,255,255)
+	    surface.DrawRect(0,0,self:GetWide(),self:GetTall())
+	end
 
-line = vgui.Create("DButton",DDP.frame)
-line:SetText("")
-line:SetPos(0,0)
-line:SetSize(5,0)
-line:SetZPos(32766)
-line:SetVisible(true)
-function line:Paint()
-    surface.SetDrawColor(0,0,255,255)
-    surface.DrawRect(0,0,self:GetWide(),self:GetTall())
-end
+	line2 = vgui.Create("DButton",DDP.frame)
+	line2:SetText("")
+	line2:SetPos(0,0)
+	line2:SetSize(5,0)
+	line2:SetZPos(32766)
+	line2:SetVisible(true)
+	
+	function line2:Paint()
+	    surface.SetDrawColor(0,0,255,255)
+	    surface.DrawRect(0,0,self:GetWide(),self:GetTall())
+	end
 
-line2 = vgui.Create("DButton",DDP.frame)
-line2:SetText("")
-line2:SetPos(0,0)
-line2:SetSize(5,0)
-line2:SetZPos(32766)
-line2:SetVisible(true)
-function line2:Paint()
-    surface.SetDrawColor(0,0,255,255)
-    surface.DrawRect(0,0,self:GetWide(),self:GetTall())
-end
+	--[[---------------------------------------------------------
+	   Horizontal: 
+	-----------------------------------------------------------]]
+	line3 = vgui.Create("DButton",DDP.frame)
+	line3:SetText("")
+	line3:SetPos(0,0)
+	line3:SetSize(5,0)
+	line3:SetZPos(32766)
+	line3:SetVisible(true)
+	
+	function line3:Paint()
+	    surface.SetDrawColor(0,0,255,255)
+	    surface.DrawRect(0,0,self:GetWide(),self:GetTall())
+	end
 
---[[---------------------------------------------------------
-   Horizontal: 
------------------------------------------------------------]]
-line3 = vgui.Create("DButton",DDP.frame)
-line3:SetText("")
-line3:SetPos(0,0)
-line3:SetSize(5,0)
-line3:SetZPos(32766)
-line3:SetVisible(true)
-function line3:Paint()
-    surface.SetDrawColor(0,0,255,255)
-    surface.DrawRect(0,0,self:GetWide(),self:GetTall())
-end
-
-line4 = vgui.Create("DButton",DDP.frame)
-line4:SetText("")
-line4:SetPos(0,0)
-line4:SetSize(5,0)
-line4:SetZPos(32766)
-line4:SetVisible(true)
-function line4:Paint()
-    surface.SetDrawColor(0,0,255,255)
-    surface.DrawRect(0,0,self:GetWide(),self:GetTall())
-end
+	line4 = vgui.Create("DButton",DDP.frame)
+	line4:SetText("")
+	line4:SetPos(0,0)
+	line4:SetSize(5,0)
+	line4:SetZPos(32766)
+	line4:SetVisible(true)
+	
+	function line4:Paint()
+	    surface.SetDrawColor(0,0,255,255)
+	    surface.DrawRect(0,0,self:GetWide(),self:GetTall())
+	end
+	
 	for i=1, #table.GetKeys( tab.elemente ) do
-
 		for index, panel in ipairs( tab.elemente[table.GetKeys( tab.elemente )[i]] ) do
 			vgui_element = vgui.Create(tostring(table.GetKeys( tab.elemente )[i]),DDP.frame)
-		
 			for k,v in ipairs( panel ) do
-
 				if( k == #panel ) then
 					vgui_element:SetSize(v.w,v.h)
 					vgui_element:SetPos(v.x,v.y)
@@ -751,8 +748,8 @@ end
 			table.insert( DDP.elemente, vgui_element )
 		end
 	end
-	VGUI_VALUE = nil
 
+	VGUI_VALUE = nil
     DDP.selected[1] = DDP.elemente[1]
 end
 
@@ -762,7 +759,7 @@ end
 function CreateProjectFile( name )
 
 --fillme!
-local path = "db/projects/"
+local path = "dd/db/projects/"
 -- if projects folder dont exists
 if( !file.IsDir( path, "DATA" ) ) then file.CreateDir( path ) end
 -- if file exists do ... bla
@@ -800,9 +797,15 @@ end
    Name: LoadProjectFile
 -----------------------------------------------------------]]
 function LoadProjectFile( name )
-local path = "db/projects/"
-	if( !file.Exists( path .. name .. ".txt", "DATA" ) ) then LocalPlayer():ChatPrint("File: " .. name .. " doesnt exists!") return end
-	local tab = util.JSONToTable( file.Read( path .. name .. ".txt", "DATA") )
+	local path = "dd/db/projects/"..name
+
+	if( !file.Exists(path, "DATA" ) ) then 
+		print("File: " .. name .. " doesnt exists!") 
+		return 
+	end
+
+	local tab = util.JSONToTable( file.Read(path, "DATA") )
+	print(tab)
 	CreateWindowFromFile( tab )
 	hook.Call( "DDP_LoadFile", nil, name )
 end

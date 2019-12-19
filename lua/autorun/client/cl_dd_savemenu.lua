@@ -19,7 +19,7 @@ end
 function SaveTheFile()
 if( saveframe != nil ) then saveframe:Remove() saveframe = nil end
 		saveframe = vgui.Create("GMenu")
-	     saveframe:SetPos( ScrW() * .5 -  ScrW() * .2265  * .5, ScrH() * .5 - ScrH() * .2841 * .5 )
+		 saveframe:SetPos( ScrW() * .5 -  ScrW() * .2265  * .5, ScrH() * .5 - ScrH() * .2841 * .5 )
 		 saveframe:SetSize(ScrW() * .2265 ,ScrH() * .2841 ) 
 		 saveframe:SetTitle("Save projectfile")
 		 saveframe:SetDraggable( false )
@@ -27,12 +27,12 @@ if( saveframe != nil ) then saveframe:Remove() saveframe = nil end
 
 
 local filename = vgui.Create("DTextEntry",saveframe)
-	     filename:SetPos(0.0091533180778032*saveframe:GetWide() ,0.91202346041056*saveframe:GetTall())
+		 filename:SetPos(0.0091533180778032*saveframe:GetWide() ,0.91202346041056*saveframe:GetTall())
 		 filename:SetSize(0.64302059496568*saveframe:GetWide(),0.073313782991202*saveframe:GetTall())
 		 filename:SetEditable(true)
 		 
 local e = vgui.Create("DButton",saveframe)
-	     e:SetPos(0.67276887871854*saveframe:GetWide() ,0.91202346041056*saveframe:GetTall())
+		 e:SetPos(0.67276887871854*saveframe:GetWide() ,0.91202346041056*saveframe:GetTall())
 		 e:SetSize(0.31350114416476*saveframe:GetWide(),0.073313782991202*saveframe:GetTall())
 		 e:SetText("Save")
 		 e.DoClick = function()
@@ -46,20 +46,20 @@ local e = vgui.Create("DButton",saveframe)
 		 end
 		 
 local e = vgui.Create("DListView",saveframe)
-	     e:SetPos(0.0091533180778032*saveframe:GetWide() ,0.087976539589443*saveframe:GetTall())
+		 e:SetPos(0.0091533180778032*saveframe:GetWide() ,0.087976539589443*saveframe:GetTall())
 		 e:SetSize(0.97711670480549*saveframe:GetWide(),0.80645161290323*saveframe:GetTall())
 		 e:SetMultiSelect( false )
-	 	 e:AddColumn( "Name" )
-	 	 e:AddColumn( "Author" )
+		 e:AddColumn( "Name" )
+		 e:AddColumn( "Author" )
 		 e:AddColumn( "VGUI" )
 
-	 	local files, dir = file.Find( "db/projects/*.txt", "DATA", "nameasc" )
+		local files, dir = file.Find( "dd/db/projects/*.txt", "DATA", "nameasc" )
 
 		for k,v in ipairs( files ) do
 		local f = string.Explode("_",v)
 			if(#f > 1 ) then
 			else
-				local tab = util.JSONToTable( file.Read("db/projects/" .. v .. "", "DATA") )
+				local tab = util.JSONToTable( file.Read("dd/db/projects/" .. v .. "", "DATA") )
 				e:AddLine( tab.name, tab.author, #tab.elemente )
 			end
 
@@ -69,58 +69,49 @@ local e = vgui.Create("DListView",saveframe)
  --[[---------------------------------------------------------
    Name: LoadTheFile
 -----------------------------------------------------------]]
- function LoadTheFile()
+function LoadTheFile()
+ 	if( loadframe != nil ) then loadframe:Remove() loadframe = nil end
+	loadframe = vgui.Create("GMenu")
+	loadframe:SetPos( ScrW() * .1916, ScrH() * .2633)
+	loadframe:SetSize(ScrW() * .2265,ScrH() * .2841) 
+	loadframe:SetTitle("Load Project")
+	loadframe:SetDraggable( false )
+	loadframe:MakePopup()
+	 
+	local filename = vgui.Create("DTextEntry",loadframe)
+	filename:SetPos(0.0091533180778032*loadframe:GetWide() ,0.91202346041056*loadframe:GetTall())
+	filename:SetSize(0.64302059496568*loadframe:GetWide(),0.073313782991202*loadframe:GetTall())
 
- if( loadframe != nil ) then loadframe:Remove() loadframe = nil end
-         loadframe = vgui.Create("GMenu")
-	     loadframe:SetPos( ScrW() * .1916, ScrH() * .2633)
-		 loadframe:SetSize(ScrW() * .2265,ScrH() * .2841) 
-		 loadframe:SetTitle("Load projectfile")
-		 loadframe:SetDraggable( false )
-		 loadframe:MakePopup()
+	local listview = vgui.Create("DListView",loadframe)
+	listview:SetPos(0.0091533180778032*loadframe:GetWide() ,0.087976539589443*loadframe:GetTall())
+	listview:SetSize(0.97711670480549*loadframe:GetWide(),0.80645161290323*loadframe:GetTall())
+	listview:SetMultiSelect( false )
+	listview:AddColumn( "Name" )
 
-		 
-		local filename = vgui.Create("DTextEntry",loadframe)
-	     filename:SetPos(0.0091533180778032*loadframe:GetWide() ,0.91202346041056*loadframe:GetTall())
-		 filename:SetSize(0.64302059496568*loadframe:GetWide(),0.073313782991202*loadframe:GetTall())
-
-
-local listview = vgui.Create("DListView",loadframe)
-	     listview:SetPos(0.0091533180778032*loadframe:GetWide() ,0.087976539589443*loadframe:GetTall())
-		 listview:SetSize(0.97711670480549*loadframe:GetWide(),0.80645161290323*loadframe:GetTall())
-		listview:SetMultiSelect( false )
-	 	 listview:AddColumn( "Name" )
-	 	 listview:AddColumn( "Author" )
-		 listview:AddColumn( "VGUI" )
-		 function listview:OnRowSelected( LineID, Line ) 
-
+	function listview:OnRowSelected( LineID, Line ) 
 		filename:SetText( Line:GetColumnText( 1 ) )
-		 end
+	end
 
-	 	local files, dir = file.Find( "db/projects/*.txt", "DATA", "nameasc" )
+	local files, dir = file.Find( "dd/db/projects/*.txt", "DATA", "nameasc" )
 
-		for k,v in ipairs( files ) do
+	for k,v in ipairs( files ) do
+		listview:AddLine(v)
+		
+	end
 
-		local f = string.Explode("_",v)
-		if( string.find(string.lower(v), "lua", 0 ) ) then
-
-		else
-				local tab = util.JSONToTable( file.Read("db/projects/" .. v .. "", "DATA") )
-				listview:AddLine( tab.name, tab.author, #tab.elemente )
+	local e = vgui.Create("DButton",loadframe)
+	e:SetPos(0.67276887871854*loadframe:GetWide() ,0.91202346041056*loadframe:GetTall())
+	e:SetSize(0.31350114416476*loadframe:GetWide(),0.073313782991202*loadframe:GetTall())
+	e:SetText("Load")
+	e.DoClick = function()
+		if listview:GetSelected()[1] != nil then
+			if listview:GetSelected()[1]:GetColumnText(1) != nil then
+				DDP.Name = listview:GetSelected()[1]:GetColumnText(1)
+				// check TextEntry text not listview
+				LoadProjectFile( listview:GetSelected()[1]:GetColumnText(1) )	
+				loadframe:Remove()
+				loadframe = nil
+			end	 
 		end
-
-		end
-		 local e = vgui.Create("DButton",loadframe)
-	     e:SetPos(0.67276887871854*loadframe:GetWide() ,0.91202346041056*loadframe:GetTall())
-		 e:SetSize(0.31350114416476*loadframe:GetWide(),0.073313782991202*loadframe:GetTall())
-		 e:SetText("Load")
-		 e.DoClick = function()
-		 DDP.Name = listview:GetSelected()[1]:GetColumnText(1)
-		 // check TextEntry text not listview
-			LoadProjectFile( listview:GetSelected()[1]:GetColumnText(1) )	
-			loadframe:Remove()
-			loadframe = nil
-			
-		 end
-		 
- end
+	end
+end
