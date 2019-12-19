@@ -1,13 +1,8 @@
-Royal-Derma-Designer
-====================
-
-Early Access Tool 
-
-Get instant access and start using; get involved with this tool as it develops. 
-Note: This Early Access tool is not complete and may or may not change further. If you are not excited to use this tool in its current state, then you should wait to see if the tool progresses further in development 
-
-Version: alpha 45w15b 
-ConsoleCommand: "open_dd" 
-
-The first initialization takes a few seconds!
+<h1>DermaDesigner</h1>
+---
+Modified/Updated version of the Royal Derma Designer addon. Open the menu with the console command "open_dd", and drag/drop components onto the opened frame.
+---
+Important things that should be coming:
+-Fix save/load (done)
+-Live editing of paint functions
 
