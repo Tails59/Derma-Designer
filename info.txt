@@ -1,11 +1,11 @@
 "AddonInfo"
 {
-	"name"				"Royal Derma Designer"
+	"name"				"Derma Designer"
 	"version"			"0.0.0.1"
-	"up_date"			"26/08/14"
-	"author_name"			"Royal"
+	"up_date"			"19/12/2019"
+	"author_name"			"Tails, based off the original addon by Royal"
 	"author_email"			""
 	"author_url"			""
-	"info"				"have lots of bugs!"
+	"info"				"Early version of Derma Designer - expect issues"
 	"override"			"0"
 }
