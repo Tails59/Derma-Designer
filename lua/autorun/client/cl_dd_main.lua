@@ -30,8 +30,6 @@ local draw = draw
 local gui = gui
 local vgui = vgui
 
-MsgC(green, "DermaDesigner: Loaded Main!")
-MsgN("")
 --[[---------------------------------------------------------
 					2
 			==================
@@ -53,8 +51,10 @@ local DDP_PANEL_BOTTOM = 4
 -----------------------------------------------------------]]
 local function Main()
 	local time = CurTime()
+
+	//Menubar on the side of the screen
 	local Mainf = vgui.Create( "GMenu" )
-	Mainf:SetPos( ScrW() - .1817 * ScrW(), 0 )
+	Mainf:SetPos( ScrW() - .1817 * ScrW()+1, 0 )
 	Mainf:SetSize(  .1817 * ScrW(), ScrH() )
 	Mainf:SetTitle( "Derma Designer")
 	Mainf:SetDraggable( false )
@@ -89,7 +89,7 @@ local function Main()
 		end
 	end
 
-	//Menubar
+	//Upper menu bar
 	local t = vgui.Create("GTab",Mainf)
 	t:SetPos(0,30)
 	t:SetSize(Mainf:GetWide(), Mainf:GetTall() * .0416 )
@@ -97,46 +97,47 @@ local function Main()
 	t:AddTab("Toolbox")
 	t:AddTab("Menu")
 
-	local settingsPanel = vgui.Create( "DPanel")
-	settingsPanel:SetPos(0,0)
-	settingsPanel:SetSize(Mainf:GetWide()+11,Mainf:GetTall() * 0.333)
+	//"Menu" tab page
+	local menuPanel = vgui.Create( "DPanel")
+	menuPanel:SetPos(0,0)
+	menuPanel:SetSize(Mainf:GetWide()+11,Mainf:GetTall() * 0.333)
 		
-	function settingsPanel:Paint( w, h )
+	function menuPanel:Paint( w, h )
 		surface.SetDrawColor(grey)
 		surface.DrawRect(0,0,w,h)
 	end
 
-	local openProject = vgui.Create("GMenuButton",settingsPanel)
+	local openProject = vgui.Create("GMenuButton",menuPanel)
 	openProject:SetText("Open Project")
-	openProject:SetPos( settingsPanel:GetWide() * 0.05, settingsPanel:GetTall() * 0.05)
+	openProject:SetPos( menuPanel:GetWide() * 0.05, menuPanel:GetTall() * 0.05)
 	openProject:SetSize(Mainf:GetWide(), Mainf:GetTall() * .0208 )
 		
 	function openProject:Clicked()
 		LoadTheFile()
 	end
 
-	local saveProject = vgui.Create("GMenuButton",settingsPanel)
+	local saveProject = vgui.Create("GMenuButton",menuPanel)
 	saveProject:SetText("Save Project")
-	saveProject:SetPos( settingsPanel:GetWide() * 0.05, settingsPanel:GetTall() * 0.12)
+	saveProject:SetPos( menuPanel:GetWide() * 0.05, menuPanel:GetTall() * 0.12)
 	saveProject:SetSize(Mainf:GetWide(), Mainf:GetTall() * .0208)
 		
 	function saveProject:Clicked()
 		SaveTheFile()
 	end
 
-	local debugProject = vgui.Create("GMenuButton",settingsPanel)
+	local debugProject = vgui.Create("GMenuButton",menuPanel)
 	debugProject:SetText("Debug")
-	debugProject:SetPos( settingsPanel:GetWide() * 0.05, settingsPanel:GetTall() * 0.19)
+	debugProject:SetPos( menuPanel:GetWide() * 0.05, menuPanel:GetTall() * 0.19)
 	debugProject:SetSize(Mainf:GetWide(), Mainf:GetTall() * .0208)
 		
 	function debugProject:Clicked()
 		CreateFrameFile( DDP.Name )
 	end
 
-	local skinCreator = vgui.Create("GMenuButton",settingsPanel)
+	local skinCreator = vgui.Create("GMenuButton",menuPanel)
 	skinCreator:SetText("Skin Creator")
 	skinCreator:SetDisabled( false )
-	skinCreator:SetPos( settingsPanel:GetWide() * 0.05, settingsPanel:GetTall() * 0.26)
+	skinCreator:SetPos( menuPanel:GetWide() * 0.05, menuPanel:GetTall() * 0.26)
 	skinCreator:SetSize(Mainf:GetWide(), Mainf:GetTall()* .0208)
 		
 	function skinCreator:Clicked()
@@ -144,19 +145,19 @@ local function Main()
 		PaintFrame( "unknown" )
 	end
 
-	local controls = vgui.Create("GMenuButton",settingsPanel)
+	local controls = vgui.Create("GMenuButton",menuPanel)
 	controls:SetText("Controls")
-	controls:SetPos( settingsPanel:GetWide() * 0.05, settingsPanel:GetTall() * 0.40)
+	controls:SetPos( menuPanel:GetWide() * 0.05, menuPanel:GetTall() * 0.40)
 	controls:SetSize(Mainf:GetWide(), Mainf:GetTall() *.0208)
 		
 	function controls:Clicked()
 		Options()
 	end
 
-	local scoreboardCreator = vgui.Create("GMenuButton",settingsPanel)
+	local scoreboardCreator = vgui.Create("GMenuButton",menuPanel)
 	scoreboardCreator:SetText("Scoreboard Creator")
 	scoreboardCreator:SetDisabled( true )
-	scoreboardCreator:SetPos( settingsPanel:GetWide() * 0.05, settingsPanel:GetTall() * 0.33)
+	scoreboardCreator:SetPos( menuPanel:GetWide() * 0.05, menuPanel:GetTall() * 0.33)
 	scoreboardCreator:SetSize(Mainf:GetWide(), Mainf:GetTall()* .0208)
 		
 	function scoreboardCreator:Clicked()
@@ -171,21 +172,22 @@ local function Main()
 		scoreboard_menu()
 	end
 
-	t:AddItem(settingsPanel,2)
+	t:AddItem(menuPanel,2)
 
-	local zuletzt = vgui.Create( "DPanel")
-	zuletzt:SetPos(0,Mainf:GetTall() * 0.3334)
-	zuletzt:SetSize(Mainf:GetWide()+11,(Mainf:GetTall() - Mainf:GetTall() * 0.333))
+	//Recent projects panel
+	local recentsPanel = vgui.Create( "DPanel")
+	recentsPanel:SetPos(0,Mainf:GetTall() * 0.3334)
+	recentsPanel:SetSize(Mainf:GetWide()+11,(Mainf:GetTall() - Mainf:GetTall() * 0.333))
 		  
-	function zuletzt:Paint( w, h )
+	function recentsPanel:Paint( w, h )
 		surface.SetDrawColor(grey)
 		surface.DrawRect( 0, 0, w, h )
 	end
 		  
-	function zuletzt:PaintOver( w, h )
-		draw.SimpleText( "Recent Projects" , "Test_font", w * 0.1, h * 0.03, white, 0, 1 )
+	function recentsPanel:PaintOver( w, h )
+		draw.SimpleText( "Recent Projects (Not Implemented)" , "Test_font", w * 0.1, h * 0.03, white, 0, 1 )
 	end
-	t:AddItem(zuletzt,2)
+	t:AddItem(recentsPanel,2)
 
 	--[[ takes to long ....
 	local temp = {}
@@ -198,59 +200,70 @@ local function Main()
 	 table.SortByMember( temp, "time" )
 		  for k,v in ipairs( temp ) do
 			if( k < 6 ) then
-		 local test = vgui.Create("GMenuButton",zuletzt)
+		 local test = vgui.Create("GMenuButton",recentsPanel)
 		 test:SetText( string.TrimRight(  v.name, ".txt" ) )
-		 test:SetPos( zuletzt:GetWide() * 0.1, zuletzt:GetTall() * (0.03 + (0.035*k)) )
+		 test:SetPos( recentsPanel:GetWide() * 0.1, recentsPanel:GetTall() * (0.03 + (0.035*k)) )
 		 test:SetSize(200,25)
 		end
 	end 
 	--  print( os.date( "%d.%m.%Y", file.Time( "ride\projects\*.txt", "DATA" ) ) )
 	--]]
 
+	//List of all vgui elements
 	panel = vgui.Create( "DScrollPanel") -- DPanelList
-	panel:SetSize(  Mainf:GetWide()+11, Mainf:GetTall()*0.2 - (math.abs(Mainf:GetTall()*0.2 - 250) ))
+	panel:SetSize(  Mainf:GetWide()+11, Mainf:GetTall()*0.5)
 	panel:SetPos( 0, 25 )
 	panel:GetVBar():SetSize(0,0)
 
 	t:AddItem(panel,1)
+
 	table.SortByMember( DDP.toolbox, "count" )
+	
+	//Adds all the vgui elements into the panel obj
+	local str, ext = "DD/icons/", ".png"
 	for k,v in ipairs( DDP.toolbox ) do
 		DDListButtom = panel:Add( "DDListButtom" )
 		DDListButtom:Dock(TOP)
 		DDListButtom:DockMargin(0,0,0,0)
-		//DDListButtom:SetPos( 25, 50 ) 
-		DDListButtom:SetImage("DD/icons/" .. v.classname .. ".png" )  --Game freeze huge fps drop!
+		DDListButtom:SetImage(str.. v.classname ..ext)  --Game freeze huge fps drop!
 		--"DD/icons/default.png"
 		DDListButtom:Droppable("ele")
 		DDListButtom:SetText( v.classname)                             // Set position
 		DDListButtom:SetSize( panel:GetWide(), 25 )     
+		
 		function DDListButtom:DoClick() 
 			local classname = self:GetText()
 			DDP.icon = classname
-			if( timer.Exists( "ddp_place" ) ) then timer.Destroy( "ddp_place" ) end
-				timer.Create( "ddp_place", 0.00001, 0, function()
-				if( !DDP.frame ) then  timer.Destroy( "ddp_place" ) return end
-					if( DDP.frame:IsHovered() ) then 
-						if( input.IsMouseDown( MOUSE_LEFT ) ) then 
+			if( timer.Exists( "ddp_place" ) ) then 
+				timer.Remove( "ddp_place" ) 
+			end
+			
+			timer.Create( "ddp_place", 0.00001, 0, function()
+				if( !DDP.frame ) then  
+					timer.Remove( "ddp_place" ) 
+					return
+				end
+				
+				if( DDP.frame:IsHovered() ) then 
+					if( input.IsMouseDown( MOUSE_LEFT ) ) then 
 						local x,y = DDP.frame:LocalCursorPos()
-							LocalPlayer():ChatPrint("placed " .. classname ) 
-							UpdatePanelRank( classname )
-							local val = #DDP.elemente+1
-							DDP.elemente[val] = vgui.Create(classname,DDP.frame)
-							DDP.elemente[val]:SetWide( 200 )
-							DDP.elemente[val]:SetPos(x,y)
+						UpdatePanelRank( classname )
+						
+						local val = #DDP.elemente+1
+						DDP.elemente[val] = vgui.Create(classname,DDP.frame)
+						DDP.elemente[val]:SetWide( 200 )
+						DDP.elemente[val]:SetPos(x,y)
 
-							local test = vgui.Create( "DDTransform", DDP.frame )
-							test:SetPos( DDP.elemente[val].x, DDP.elemente[val].y )
-							test:SetSize( DDP.elemente[val]:GetWide(), DDP.elemente[val]:GetTall() )
-							test:SetTPanel( DDP.elemente[val] )
+						local test = vgui.Create( "DDTransform", DDP.frame )
+						test:SetPos( DDP.elemente[val].x, DDP.elemente[val].y )
+						test:SetSize( DDP.elemente[val]:GetWide(), DDP.elemente[val]:GetTall() )
+						test:SetTPanel( DDP.elemente[val] )
 							
-							timer.Remove("ddp_place")
-						end 
-					end
-				end)
-				--DDP.elemente[val]:Buildmode(true)
-			end 
+						timer.Remove("ddp_place")
+					end 
+				end
+			end)		
+		end 
 		DDListButtom:SizeToContents()                  
 	end
 
@@ -261,7 +274,7 @@ local function Main()
 	function searchBar:OnChange( )
 		for k,v in ipairs( DDP.toolbox ) do
 			if( string.match( string.lower(v.classname), string.lower(self:GetText()))) then
-				anel:ScrollToChild(panel:GetCanvas():GetChildren()[k])
+				panel:ScrollToChild(panel:GetCanvas():GetChildren()[k])
 			end
 		end
 	end
@@ -298,7 +311,6 @@ local function Main()
 							c.DataChanged = function( _, val ) 
 								RunString([[DDP.selected[1]:]] .. b.name .. [[("]] .. val .. [[")]])  
 							end
-
 						elseif( b.typ == "number" ) then
 							RunString( [[local succ, err = pcall( function() DDP.selected[1]:Get]] .. string.sub( b.name, 4, #b.name ) .. [[()]] .. [[ end ) if( succ ) then  ST[1] = DDP.selected[1]:Get]] .. string.sub( b.name, 4, #b.name ) .. [[() else ST[1] = 1.0 end]] ) 
 							c = DProperties:CreateRow( "Settings", b.name )
@@ -309,6 +321,7 @@ local function Main()
 								RunString([[DDP.selected[1]:]] .. b.name .. [[(]] .. val .. [[)]] ) 
 							end
 						elseif( b.typ == "boolean") then
+							print(b.name)
 							RunString( [[local succ, err = pcall( function() DDP.selected[1]:Get]] .. string.sub( b.name, 4, #b.name ) .. [[()]] .. [[ end ) if( succ ) then  ST[1] = DDP.selected[1]:Get]] .. string.sub( b.name, 4, #b.name ) .. [[() else ST[1] = false end]] ) 
 							c = DProperties:CreateRow( "Settings", b.name )
 							c:Setup( "Boolean" )
@@ -346,6 +359,14 @@ local function Main()
 							c.DataChanged = function( _, val ) RunString([[DDP.selected[1]:]] .. b.name .. [[("]] .. val .. [[")]])  end
 						end
 					end
+				end
+
+				c = DProperties:CreateRow("Paint", b.name)
+				c:Setup("Generic")
+				c:SetValue(ST[1])
+
+				c.DataChanged = function(_, val)
+					RunString([[DDP.selected[1].Paint = function(self, w, h) ]]..val..[[end]])		
 				end
 
 				DProperties:SetSize( Mainf:GetWide(), Mainf:GetTall()*0.5 )
@@ -393,24 +414,24 @@ local function Main()
 end
 
 --[[---------------------------------------------------------
-   Name: OpenDDD
+   Called when the DermaDesigner menu should open
+   (after the concommand)
 -----------------------------------------------------------]]
 function OpenDDD()
 	GetAllPanels()
 
+	//The editable DFrame the user will work on
 	DDP.frame = vgui.Create( "DFrame" )
 	DDP.frame:SetPos( 100, 100 )
 	DDP.frame:SetSize(ScrW()/2,ScrH()/2)
-	DDP.frame:SetTitle( "My new Derma frame" )
+	DDP.frame:SetTitle( "Untitled Derma" )
 	DDP.frame:SetVisible( true )
 	DDP.frame:SetDraggable( true )
 	DDP.frame:SetSizable( true )
 	DDP.frame:ShowCloseButton( true )
 	DDP.frame:MakePopup()
-	function DDP.frame:OnClose()
-		MsgC(green, "Closed DermaDesigner")
-		MsgN("")
 
+	function DDP.frame:OnClose()
 		DDP.frame = nil
 		table.Empty(DDP.elemente)
 		table.Empty(DDP.selected)
@@ -422,6 +443,7 @@ function OpenDDD()
 	   line == links
 	   line2 == rechts
 	-----------------------------------------------------------]]
+	
 	line = vgui.Create("DButton",DDP.frame)
 	line:SetText("")
 	line:SetPos(0,0)
@@ -429,9 +451,8 @@ function OpenDDD()
 	line:SetZPos(32766)
 	line:SetVisible(true)
 	function line:Paint()
-
-	surface.SetDrawColor(red)
-	surface.DrawRect(0,0,self:GetWide(),self:GetTall())
+		surface.SetDrawColor(red)
+		surface.DrawRect(0,0,self:GetWide(),self:GetTall())
 	end
 
 

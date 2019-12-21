@@ -19,16 +19,12 @@ AccessorFunc( PANEL, "m_colCursor", 		"CursorColor" )
 
 AccessorFunc( PANEL, "m_bDisabled", 		"Disabled" )
 
-
-
-
 Derma_Install_Convar_Functions( PANEL )
 
 --[[---------------------------------------------------------
 
 -----------------------------------------------------------]]
 function PANEL:Init()
-
 	self:SetHistoryEnabled( false )
 	self.History = {}
 	self.HistoryPos = 0
@@ -198,8 +194,6 @@ end
 -----------------------------------------------------------]]
 function PANEL:OnChange()
 
-	
-		
 end
 
 function PANEL:OpenAutoComplete( tab )
@@ -227,16 +221,13 @@ end
 	Think
 -----------------------------------------------------------]]
 function PANEL:Think()
-
 	self:ConVarStringThink()
-
 end
 
 --[[---------------------------------------------------------
 	OnEnter
 -----------------------------------------------------------]]
 function PANEL:OnEnter()
-
 	-- For override
 	self:UpdateConvarValue()
 	self:OnValueChange( self:GetText() )
@@ -247,7 +238,6 @@ end
 	UpdateConvarValue
 -----------------------------------------------------------]]
 function PANEL:UpdateConvarValue()
-
 	-- This only kicks into action if this variable has
 	-- a ConVar associated with it.
 	self:ConVarChanged( self:GetValue() )
@@ -259,15 +249,11 @@ end
 	Paint
 -----------------------------------------------------------]]
 function PANEL:Paint( w, h )
-
 	if ( self.m_bBackground ) then
-	
-
-			surface.SetDrawColor(42,42,42,255)
-			surface.DrawRect(0,0,w,h)
-	
-	
+		surface.SetDrawColor(42,42,42,255)
+		surface.DrawRect(0,0,w,h)
 	end
+
 	self:DrawTextEntryText( Color(255,255,0,255), self.m_colHighlight, self.m_colCursor )
 	/*
 	local rows = string.Explode( "\n", self:GetValue() )
@@ -288,9 +274,7 @@ end
    Name: PerformLayout
 -----------------------------------------------------------]]
 function PANEL:PerformLayout()
-
 	derma.SkinHook( "Layout", "TextEntry", self )
-
 end
 
 
@@ -298,7 +282,6 @@ end
    Name: SetValue ( A simple redirect for the ConVar stuff )
 -----------------------------------------------------------]]
 function PANEL:SetValue( strValue )
-
 	-- Don't update if we're typing into it!
 	-- I'm sure a lot of people will want to reverse this behaviour :(
 	if ( vgui.GetKeyboardFocus() == self ) then return end
@@ -309,7 +292,6 @@ function PANEL:SetValue( strValue )
 	self:OnValueChange( strValue )
 	
 	self:SetCaretPos( CaretPos )
-
 end
 
 
@@ -324,48 +306,39 @@ end
    Name: CheckNumeric
 -----------------------------------------------------------]]
 function PANEL:CheckNumeric( strValue )
-
 	-- Not purely numeric, don't run the check
 	if ( !self:GetNumeric() ) then return false end
 	
 	-- God I hope numbers look the same in every language
 	if ( !string.find ( strAllowedNumericCharacters, strValue ) ) then
-	
 		-- Noisy Error?
 		return true
-		
 	end
 
-	return false	
-
+	return false
 end
 
 --[[---------------------------------------------------------
    Name: AllowInput
 -----------------------------------------------------------]]
 function PANEL:AllowInput( strValue )
-
 	-- This is layed out like this so you can easily override and 
 	-- either keep or remove this numeric check.
 	if ( self:CheckNumeric( strValue ) ) then return true end
-
 end
 
 --[[---------------------------------------------------------
    Name: SetEditable
 -----------------------------------------------------------]]
 function PANEL:SetEditable( b )
-	
 	self:SetKeyboardInputEnabled( b )
 	self:SetMouseInputEnabled( b )
-	
 end
 
 --[[---------------------------------------------------------
    Name: OnGetFocus
 -----------------------------------------------------------]]
 function PANEL:OnGetFocus()
-	
 	--
 	-- These hooks are here for the sake of things like the spawn menu
 	--  which don't have key focus until you click on one of the text areas.
@@ -373,41 +346,35 @@ function PANEL:OnGetFocus()
 	-- If you make a control for the spawnmenu that requires keyboard input
 	-- You should have these 3 functions in your panel, so it can handle it.
 	--
-
 	hook.Run( "OnTextEntryGetFocus", self )
-	
 end
 
 --[[---------------------------------------------------------
    Name: OnLoseFocus
 -----------------------------------------------------------]]
 function PANEL:OnLoseFocus()
-	
 	self:UpdateConvarValue()
 	
 	hook.Call( "OnTextEntryLoseFocus", nil, self )
-	
 end
 
 --[[---------------------------------------------------------
    Name: OnMousePressed
 -----------------------------------------------------------]]
 function PANEL:OnMousePressed( mcode )
-	
 	self:OnGetFocus()
-	
 end
 
 --[[---------------------------------------------------------
    Name: AddHistory
 -----------------------------------------------------------]]
 function PANEL:AddHistory( txt )
-	
-	if ( !txt || txt == "" ) then return; end
+	if ( !txt || txt == "" ) then 
+		return 
+	end
 	
 	table.RemoveByValue( self.History, txt )	
 	table.insert( self.History, txt )
-	
 end
 
 
