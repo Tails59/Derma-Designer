@@ -4,5 +4,8 @@ Modified/Updated version of the Royal Derma Designer addon. Open the menu with t
 
 Important things that should be coming:
 1. Fix save/load (done)
-2. Live editing of paint functions
+2. Live editing of paint functions (In progress)
+3. Add most of the element metafunctions
+4. Font designer/creator
+5. Create persistent themes for vgui elements
 
