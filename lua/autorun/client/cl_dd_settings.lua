@@ -95,6 +95,7 @@ function Options()
 	Type:AddChoice( "Table" )
 	Type:AddChoice( "Color" )
 	Type:AddChoice( "Angle" )
+	Type:AddChoice( "Function" )
 
 	Type.OnSelect = function( panel, index, value )
 		
@@ -117,7 +118,6 @@ function Options()
 	AppList:AddColumn( "Methods" )
 	AppList:AddColumn( "Type" )
 
-
 	function AppList:OnRowRightClick( LineID, Line )
 		if( !Line:IsValid() ) then return end
 		
@@ -125,7 +125,7 @@ function Options()
 
 		local Menu = DermaMenu() 	
 
-		local r = Menu:AddOption( "remove", function() 
+		local r = Menu:AddOption( "Remove", function() 
 			table.remove( DDP.vgui[selectedm], LineID ) 
 			AppList:RemoveLine( LineID ) 
 			changes = true 
@@ -160,7 +160,7 @@ function Options()
 	
 		function DDListButtom:DoClick() 
 			if( changes ) then
-				CreateMessageBox( "You didnt save your changes! Do Want to save them?", { x = frame:GetWide() * .5 , y = frame:GetTall() * .5 , w = frame:GetWide() * .5 , h = frame:GetTall() * .5 } , function() file.Write( "dd/db/vgui.txt", util.TableToJSON( DDP.vgui ) ) changes = false end , function() print("no") changes = false end ) 
+				CreateMessageBox( "You didn't save your changes! Do you want to save them?", { x = frame:GetWide() * .5 , y = frame:GetTall() * .5 , w = frame:GetWide() * .5 , h = frame:GetTall() * .5 } , function() file.Write( "dd/db/vgui.txt", util.TableToJSON( DDP.vgui, true) ) changes = false end , function() print("no") changes = false end ) 
 			end
 			
 			AppList:Clear()
@@ -181,23 +181,24 @@ function Options()
 	local Save = vgui.Create( "DButton", panel2 )
 	Save:SetPos(panel2:GetWide() * .5 - panel2:GetWide() * .25, panel2:GetTall() * .5)
 	Save:SetSize(panel2:GetWide() * .5, 20)
-	Save:SetText("save")
-	Save.DoClick = function( self )
-
-	if( Method:GetText() == "" ) then return end
-	if( string.sub( Method:GetText(), 1, 3) != "Set" ) then return end
+	Save:SetText("Save")
 	
-	for k,v in ipairs( DDP.vgui[selectedm] ) do
-		print( v.name )
-		if( string.lower( tostring(v.name) ) ==  string.lower(Method:GetText()) ) then
-			return
-		end
-	end
-
-	AppList:AddLine( Method:GetText(), Type:GetValue() )
-	table.insert( DDP.vgui[selectedm], { name = Method:GetText(), typ = Type:GetValue() } )
+	Save.DoClick = function( self )
+		if( Method:GetText() == "" ) then return end
+		if( string.sub( Method:GetText(), 1, 3) != "Set" ) then return end
 		
-	file.Write( "dd/db/vgui.txt", util.TableToJSON( DDP.vgui ) )
+		for k,v in ipairs( DDP.vgui[selectedm] ) do
+			print( v.name )
+			
+			if( string.lower( tostring(v.name) ) ==  string.lower(Method:GetText()) ) then
+				return
+			end
+		end
+
+		AppList:AddLine( Method:GetText(), Type:GetValue() )
+		table.insert( DDP.vgui[selectedm], { name = Method:GetText(), typ = Type:GetValue() } )
+			
+		file.Write( "dd/db/vgui.txt", util.TableToJSON( DDP.vgui ) )
 	end
 
 	board:AddItem(panel2,2)

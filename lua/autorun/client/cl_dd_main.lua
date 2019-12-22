@@ -302,7 +302,8 @@ local function Main()
 				AS = {}
 					for a,b in ipairs( DDP.vgui[DDP.selected[1].ClassName] ) do 
 						ST={}
-						if( b.typ == "string" ) then
+						local type = string.lower(b.typ)
+						if( type == "string" ) then
 							RunString( [[local succ, err = pcall( function() DDP.selected[1]:Get]] .. string.sub( b.name, 4, #b.name ) .. [[()]] .. [[ end ) if( succ ) then  ST[1] = DDP.selected[1]:Get]] .. string.sub( b.name, 4, #b.name ) .. [[() else ST[1] = "text" end]] ) 
 							c = DProperties:CreateRow( "Settings", b.name )
 							c:Setup( "Generic" )
@@ -311,7 +312,7 @@ local function Main()
 							c.DataChanged = function( _, val ) 
 								RunString([[DDP.selected[1]:]] .. b.name .. [[("]] .. val .. [[")]])  
 							end
-						elseif( b.typ == "number" ) then
+						elseif( type == "number" ) then
 							RunString( [[local succ, err = pcall( function() DDP.selected[1]:Get]] .. string.sub( b.name, 4, #b.name ) .. [[()]] .. [[ end ) if( succ ) then  ST[1] = DDP.selected[1]:Get]] .. string.sub( b.name, 4, #b.name ) .. [[() else ST[1] = 1.0 end]] ) 
 							c = DProperties:CreateRow( "Settings", b.name )
 							c:Setup( "Float", {min = 0, max = 255 } )
@@ -320,7 +321,7 @@ local function Main()
 							c.DataChanged = function( _, val ) 
 								RunString([[DDP.selected[1]:]] .. b.name .. [[(]] .. val .. [[)]] ) 
 							end
-						elseif( b.typ == "boolean") then
+						elseif( type == "boolean") then
 							print(b.name)
 							RunString( [[local succ, err = pcall( function() DDP.selected[1]:Get]] .. string.sub( b.name, 4, #b.name ) .. [[()]] .. [[ end ) if( succ ) then  ST[1] = DDP.selected[1]:Get]] .. string.sub( b.name, 4, #b.name ) .. [[() else ST[1] = false end]] ) 
 							c = DProperties:CreateRow( "Settings", b.name )
@@ -330,7 +331,7 @@ local function Main()
 							c.DataChanged = function( _, val )
 								RunString([[DDP.selected[1]:]] .. b.name .. [[(]] .. val .. [[)]]) 
 							end
-						elseif( b.typ == "table" or b.typ == "color" ) then
+						elseif( type == "table" or b.typ == "color" ) then
 							RunString( [[local succ, err = pcall( function() DDP.selected[1]:Get]] .. string.sub( b.name, 4, #b.name ) .. [[()]] .. [[ end ) if( succ ) then  ST[1] = DDP.selected[1]:Get]] .. string.sub( b.name, 4, #b.name ) .. [[() else ST[1] = Vector(0,0,0) end]] ) 
 							c = DProperties:CreateRow( "Settings", b.name )
 							c:Setup( "VectorColor" )
@@ -347,28 +348,35 @@ local function Main()
 								col = string.Explode(" ",val) Col = Color(col[1],col[2],col[3])
 								RunString([[DDP.selected[1]:]] .. b.name .. [[( Color(Col.r * 255, Col.g* 255, Col.b * 255) )]])
 							end
-						elseif( b.typ == "no value" ) then
+						elseif( type == "no value" ) then
 							c = DProperties:CreateRow( "Settings", b.name )
 							c:Setup( "Generic" )
 							c:SetValue("novalue" )
 							c.DataChanged = function( _, val )  end
-						elseif( b.typ == "nil") then
+						elseif( type == "nil") then
 							c = DProperties:CreateRow( "Settings", b.name )
 							c:Setup( "Generic" )
 							c:SetValue( ST[1] )
 							c.DataChanged = function( _, val ) RunString([[DDP.selected[1]:]] .. b.name .. [[("]] .. val .. [[")]])  end
+						elseif(type == "function") then
+							c = DProperties:CreateRow("Advanced", b.name)
+							c:Setup("Generic")
+							c:SetValue(ST[1])
+							
+							c.DataChanged = function(_, val)
+								RunString([[DDP.selected[1].]]..b.name..[[ = function() ]]..val..[[end]])
+							end
 						end
 					end
 				end
 
-				c = DProperties:CreateRow("Paint", b.name)
+				c = DProperties:CreateRow("Paint", "Paint")
 				c:Setup("Generic")
 				c:SetValue(ST[1])
 
 				c.DataChanged = function(_, val)
 					RunString([[DDP.selected[1].Paint = function(self, w, h) ]]..val..[[end]])		
 				end
-
 				DProperties:SetSize( Mainf:GetWide(), Mainf:GetTall()*0.5 )
 				DProperties:SetPos(0,Mainf:GetTall()*0.5)
 				t:AddItem(DProperties,1)

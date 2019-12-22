@@ -454,7 +454,6 @@ end
     --    print( "check" )
         
         if( #table.GetKeys( DDP.vgui ) > 0 ) then
-        print( "Write DDP.vgui")
 		    file.Write( "dd/db/vgui.txt", util.TableToJSON( DDP.vgui ) )
         end
 
